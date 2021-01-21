@@ -1,0 +1,30 @@
+# Macro file for example B5
+# 
+# To be run preferably in batch, without graphics:
+# % exampleB5 run2.mac
+#
+#/run/numberOfWorkers 4
+/run/initialize
+#
+#  turn off randomization 
+#
+/B5/generator/randomizePrimary FALSE
+/B5/generator/sigmaMomentum 0. 
+/B5/generator/sigmaAngle 0.
+/run/verbose 1
+/run/printProgress 0
+#
+/gun/particle mu+
+/B5/detector/armAngle 0.0 deg
+/B5/generator/momentum 100. GeV
+/B5/field/value 0.5 tesla
+/analysis/setFileName B5_mu+
+/run/beamOn 1000
+/vis/open DAWNFILE
+/vis/open HepRepFile
+/vis/open VRML2FILE
+/vis/scene/add/trajectories smooth
+/vis/modeling/trajectories/create/drawByCharge
+/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
+/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
+
