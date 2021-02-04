@@ -12,16 +12,22 @@ from numpy.polynomial import Polynomial
 rcParams['mathtext.fontset'] = 'stix'
 rcParams['font.family'] = 'STIXGeneral'
 
+# Arrays and files #
+inf = ROOT.TFile.Open("out_1.root")
+tree = inf.Get("B5")
+p = []
+
 # Constants #
 B = 0.5 # Magnetic field strength of 0.5 T
-q = 3*(10**8)/(10**9) # Muon electric charge (GeV)
 L = 2.0 # Length of magnetic field chamber
 dz = 0.5 # Drift chamber wire separation distances
 
-def fit(m,x,c): # straight line function (y=mx+c) to plot reconstructed xz-plane track
+
+def fit(m,x,c): # Straight line function (y=mx+c) to plot reconstructed xz-plane track
     return m*x+c
 
-def trackReconstruction(event, chamber):
+
+def trackReconstruction(event, chamber): # Reconstruct the xz-plane tracks to output the intercept and gradient of the best fit lline
     if chamber == 1:
         xz_pos = [event.Dc1HitsVector_z,event.Dc1HitsVector_x]
     elif chamber == 2:
@@ -43,12 +49,14 @@ def trackReconstruction(event, chamber):
 
     return m, c
 
-def determineMomentum(m1,c1,m2,c2):
+
+def determineMomentum(m1,c1,m2,c2): # Calculates sigma, dx and momentum using Eq.(5) in the notes
     sigma = math.atan((m2-m1)/(1+m1*m2))
     dx = abs((m1*(4.5)+c1)-(m2*(-2)+c2))
-    return (B*q*math.sqrt(L**2 + dx**2))/sigma
+    return (0.3*B*math.sqrt(L**2 + dx**2))/sigma
 
-def plotMomenta(momenta):
+
+def plotMomenta(momenta): # Plots reconstructed momentum as a histogram and calculates the resolution (width)
     n, bins, patches = plt.hist(momenta, bins=40, edgecolor = "k", color = "royalblue", alpha = 0.8)
     xmin, xmax = plt.xlim()
     mu, std = norm.fit(momenta)
@@ -67,15 +75,14 @@ def plotMomenta(momenta):
     plt.savefig("Reconstructed_momentum.pdf")
     return n, bins
 
-inf = ROOT.TFile.Open("out_1.root")
-tree = inf.Get("B5")
-p = []
-for event in tree:
+
+for event in tree: # Main function to run
     if len(event.Dc1HitsVector_x)==5 and len(event.Dc2HitsVector_x)==5:
         m1,c1 = trackReconstruction(event, 1)
         m2,c2 = trackReconstruction(event, 2)
         recMom = determineMomentum(m1,c1,m2,c2)
-        if abs(recMom)<200: p.append(abs(recMom))
+        if abs(recMom)<200: 
+            p.append(abs(recMom))
 n, bins = plotMomenta(p)
 
 
