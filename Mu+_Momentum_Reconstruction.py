@@ -13,12 +13,12 @@ rcParams['mathtext.fontset'] = 'stix'
 rcParams['font.family'] = 'STIXGeneral'
 
 # Arrays and files #
-inf = ROOT.TFile.Open("out_2a.root")
+inf = ROOT.TFile.Open("out_4.root")
 tree = inf.Get("B5")
 p = []
 
 # Constants #
-B = 0.5 # Magnetic field strength of 0.5 T
+B = 0.5 # Magnetic field strength of 0.5 T (adjust for different B-fields)
 L = 2.0 # Length of magnetic field chamber
 dz = 0.5 # Drift chamber wire separation distances
 
@@ -76,6 +76,19 @@ def plotMomenta(momenta): # Plots reconstructed momentum as a histogram and calc
     plt.savefig("Reconstructed_momentum.png")
     return n, bins
 
+taskChoice = input("Choose particle, (a) antimuon, (b) positron, (c) proton \n")
+if taskChoice == "1":
+    infile = "task1.root"
+elif taskChoice == "2a":
+    infile = "task2a.root"
+elif taskChoice == "2b":
+    infile = "task2b.root"
+elif taskChoice == "3a":
+    infile = "task3a.root"
+elif taskChoice == "3b":
+    infile = "task3c.root"
+elif taskChoice == "4":
+    infile = "task4.root"
 
 for event in tree: # Main function to run
     if len(event.Dc1HitsVector_x)==5 and len(event.Dc2HitsVector_x)==5:
