@@ -12,11 +12,6 @@ from numpy.polynomial import Polynomial
 rcParams['mathtext.fontset'] = 'stix'
 rcParams['font.family'] = 'STIXGeneral'
 
-# Arrays and files #
-inf = ROOT.TFile.Open(infile)
-tree = inf.Get("B5")
-p = []
-
 # Constants #
 L = 2.0 # Length of magnetic field chamber
 dz = 0.5 # Drift chamber wire separation distances
@@ -96,6 +91,11 @@ elif taskChoice == "3b":
 elif taskChoice == "4":
     infile = "task4.root"
     B = 0.5
+
+# Arrays and files #
+inf = ROOT.TFile.Open(infile)
+tree = inf.Get("B5")
+p = []
 
 for event in tree: # Main function to run
     if len(event.Dc1HitsVector_x)==5 and len(event.Dc2HitsVector_x)==5:

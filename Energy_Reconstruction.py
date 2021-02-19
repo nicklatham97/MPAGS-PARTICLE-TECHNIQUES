@@ -12,12 +12,6 @@ from numpy.polynomial import Polynomial
 rcParams['mathtext.fontset'] = 'stix'
 rcParams['font.family'] = 'STIXGeneral'
 
-# Arrays and files #
-inf = ROOT.TFile.Open(infile)
-tree = inf.Get("B5")
-ecal_energy = []
-hcal_energy = []
-
 def plotEnergy(xvalues1, xvalues2): # Plots reconstructed energy as a histogram
     n, bins, patches = plt.hist(xvalues1, bins=nbins1, edgecolor = "k", color = "firebrick", alpha = 0.8, histtype = 'stepfilled')
     n2, bins2, patches2 = plt.hist(xvalues2, bins=nbins2, edgecolor = "k", color = "royalblue", alpha = 0.8, histtype = 'stepfilled')
@@ -36,7 +30,6 @@ def plotEnergy(xvalues1, xvalues2): # Plots reconstructed energy as a histogram
 
 
 # Main program #
-
 particleChoice = input("Choose particle, (a) antimuon, (b) positron, (c) proton \n") # Choose particle and assign limits, labels and input files
 if particleChoice == "a":
     infile = "task5a.root"
@@ -56,6 +49,11 @@ elif particleChoice == "c":
     limits = [0,80]
     nbins1 = 10
     nbins2 = 70
+
+inf = ROOT.TFile.Open(infile)
+tree = inf.Get("B5")
+ecal_energy = []
+hcal_energy = []
 
 for event in tree: # Main function to plot histograms of each calorimeter and print the total energy
     if event.ECEnergy != 0:
