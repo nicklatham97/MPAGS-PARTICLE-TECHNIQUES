@@ -18,7 +18,6 @@ tree = inf.Get("B5")
 p = []
 
 # Constants #
-B = 0.5 # Magnetic field strength of 0.5 T (adjust for different B-fields)
 L = 2.0 # Length of magnetic field chamber
 dz = 0.5 # Drift chamber wire separation distances
 
@@ -50,14 +49,14 @@ def trackReconstruction(event, chamber): # Reconstruct the xz-plane tracks to ou
     return m, c
 
 
-def determineMomentum(m1,c1,m2,c2): # Calculates sigma, dx and momentum using Eq.(5) in the notes
-    sigma = math.atan((m2-m1)/(1+m1*m2))
-    dx = abs((m1*(4.5)+c1)-(m2*(-2)+c2))
-    return (0.3*B*math.sqrt(L**2 + dx**2))/sigma
+def determineMomentum(m1,c1,m2,c2): # Calculates sigma, dx and momentum using Eq.(5) in the notes from the angle between two lines of gradients m1, m2
+    sigma = math.atan((m2-m1)/(1+m1*m2)) 
+    dx = abs((m1*(4.5)+c1)-(m2*(-2)+c2)) 
+    return (0.3*B*math.sqrt(L**2 + dx**2))/sigma 
 
 
 def plotMomenta(momenta): # Plots reconstructed momentum as a histogram and calculates the resolution (width)
-    n, bins, patches = plt.hist(momenta, bins=70, edgecolor = "k", color = "royalblue", alpha = 0.8, histtype = 'stepfilled')
+    n, bins, patches = plt.hist(momenta, bins=80, edgecolor = "k", color = "royalblue", alpha = 0.8, histtype = 'stepfilled')
     xmin, xmax = plt.xlim()
     mu, std = norm.fit(momenta)
     x = np.linspace(xmin, xmax, 1000)
@@ -71,24 +70,32 @@ def plotMomenta(momenta): # Plots reconstructed momentum as a histogram and calc
     plt.minorticks_on() 
     plt.tick_params(axis="both",which = "both", direction="in")
     plt.axvline(mu, color='k', linewidth=1, linestyle = "dashed")
-    plt.annotate("$\mu$ = " + str(round(mu,1)) + "\n" + "$\sigma$ = " + str(round(std,2)), xy=(0.76, 0.85), xycoords='axes fraction', fontsize = 18)
+    plt.annotate("$\mu$ = " + "\n" + "$\sigma$ = ", xy=(0.76, 0.85), xycoords='axes fraction', fontsize = 18)
     plt.show()
     plt.savefig("Reconstructed_momentum.png")
     return n, bins
 
-taskChoice = input("Choose particle, (a) antimuon, (b) positron, (c) proton \n")
+# Main #
+
+taskChoice = input("Choose task \n") # Choose task to assign B field and input filename
 if taskChoice == "1":
     infile = "task1.root"
+    B = 0.5
 elif taskChoice == "2a":
     infile = "task2a.root"
+    B = 0.25
 elif taskChoice == "2b":
     infile = "task2b.root"
+    B = 1.00
 elif taskChoice == "3a":
     infile = "task3a.root"
+    B = 0.5
 elif taskChoice == "3b":
     infile = "task3c.root"
+    B = 0.5
 elif taskChoice == "4":
     infile = "task4.root"
+    B = 0.5
 
 for event in tree: # Main function to run
     if len(event.Dc1HitsVector_x)==5 and len(event.Dc2HitsVector_x)==5:

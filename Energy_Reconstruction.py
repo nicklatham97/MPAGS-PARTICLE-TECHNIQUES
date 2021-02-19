@@ -12,26 +12,6 @@ from numpy.polynomial import Polynomial
 rcParams['mathtext.fontset'] = 'stix'
 rcParams['font.family'] = 'STIXGeneral'
 
-particleChoice = input("Choose particle, (a) antimuon, (b) positron, (c) proton \n")
-if particleChoice == "a":
-    infile = "task5a.root"
-    label = "$\mu^{+}$"
-    limits = [0,2]
-    nbins1 = 80
-    nbins2 = 150
-elif particleChoice == "b":
-    infile = "task5b.root"
-    label = "$e^{+}$"
-    limits = [-2,100]
-    nbins1 = 2
-    nbins2 = 70
-elif particleChoice == "c":
-    infile = "task5c.root"
-    label = "$p^{+}$"
-    limits = [0,80]
-    nbins1 = 10
-    nbins2 = 70
-
 # Arrays and files #
 inf = ROOT.TFile.Open(infile)
 tree = inf.Get("B5")
@@ -54,7 +34,30 @@ def plotEnergy(xvalues1, xvalues2): # Plots reconstructed energy as a histogram
     plt.savefig("Reconstructed_energy.png")
     return n, bins, n2, bins2
 
-for event in tree: # Main function to run
+
+# Main program #
+
+particleChoice = input("Choose particle, (a) antimuon, (b) positron, (c) proton \n") # Choose particle and assign limits, labels and input files
+if particleChoice == "a":
+    infile = "task5a.root"
+    label = "$\mu^{+}$"
+    limits = [0,2]
+    nbins1 = 80
+    nbins2 = 150
+elif particleChoice == "b":
+    infile = "task5b.root"
+    label = "$e^{+}$"
+    limits = [-2,100]
+    nbins1 = 2
+    nbins2 = 70
+elif particleChoice == "c":
+    infile = "task5c.root"
+    label = "$p^{+}$"
+    limits = [0,80]
+    nbins1 = 10
+    nbins2 = 70
+
+for event in tree: # Main function to plot histograms of each calorimeter and print the total energy
     if event.ECEnergy != 0:
         ecal_energy.append(event.ECEnergy/1000)
     if event.HCEnergy != 0:
