@@ -13,7 +13,7 @@ rcParams['mathtext.fontset'] = 'stix'
 rcParams['font.family'] = 'STIXGeneral'
 
 # Arrays and files #
-inf = ROOT.TFile.Open("out_4.root")
+inf = ROOT.TFile.Open(infile)
 tree = inf.Get("B5")
 p = []
 
